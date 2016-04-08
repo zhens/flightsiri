@@ -1,0 +1,7 @@
+ruby '2.2.4'
+source 'https://rubygems.org'
+gem 'twilio-ruby'
+gem 'sinatra'
+gem 'rack'
+gem 'nokogiri'
+gem 'logger'
