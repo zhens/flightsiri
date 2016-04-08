@@ -35,5 +35,6 @@ def handleSmsCommand(sms_text)
 end
 
 get '/sms-inbound' do
-  handleSmsCommand params[:Body]
+  #handleSmsCommand params[:Body]
+  send_sms 'Sending it back!!'
 end
