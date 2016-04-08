@@ -24,9 +24,9 @@ def handleSmsCommand(sms_text)
     SmsCommandHandler.new]
 
   handlers.each do |handler|
-    if handler.can_handle? sms_text
+    if handler.can_handle?(sms_text)
       response = handler.handle(sms_text)
-      response = handler.failure_message if response.nil?
+      #response = handler.failure_message if response.nil?
       #Logger.new(STDOUT).debug "Command \"#{sms_text}\" is handled by #{handler.class}.\nResponse: #{response}"
       send_sms(response)
       break
