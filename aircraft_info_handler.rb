@@ -14,7 +14,7 @@ class AircraftInfoHandler < SmsCommandHandler
   end
 
   def handle(sms_text)
-    aircraft_id, _ = sms_text.split
+    aircraft_id, = sms_text.split
     return 'Invalid aircraft id.' unless is_valid_aircraft_id?(aircraft_id)
     flight_info(aircraft_id)
   end

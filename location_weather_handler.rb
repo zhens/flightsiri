@@ -14,7 +14,7 @@ class LocationWeatherHandler < SmsCommandHandler
   end
 
   def handle(sms_text)
-    location_id, _ = sms_text.split
+    location_id, = sms_text.split
     return 'Invalid location id.' unless is_valid_location_id?(location_id)
     location_weather(location_id)
   end

@@ -14,12 +14,33 @@ class AircraftLocationHandler < SmsCommandHandler
   end
 
   def handle(sms_text)
-    aircraft_id, _ = sms_text.split
+    aircraft_id, = sms_text.split
     return 'Invalid aircraft id.' unless is_valid_aircraft_id?(aircraft_id)
     flight_location(aircraft_id)
   end
 
   private
+
+  # This function may need to change according to the web structure changes in the scraped website.
+  def extract_aircraft_status_raw_text(section)
+    # We are aiming at find detail string in a structure like:
+    #       ...
+    #          <th ...>Status</th>
+    #          <td ...>
+    #               <span ...>RAW TEXT</span>
+    #               ...
+    #          </td>
+    #          ...
+    #       ...
+    status_ths = section.css('th').select { |node| node.text == 'Status' }
+    return nil unless status_ths.count > 0
+    status_th = status_ths[0]
+
+    status_td = status_th.next_element
+    return nil unless status_td
+
+    status_td.text
+  end
 
   # This function may need to change according to the web structure changes in the scraped website.
   def extract_landed_aircraft_status(section)
@@ -32,15 +53,7 @@ class AircraftLocationHandler < SmsCommandHandler
     #          </td>
     #          ...
     #       ...
-
-    status_ths = section.css('th').select { |node| node.text == 'Status' }
-    return nil unless status_ths.count > 0
-    status_th = status_ths[0]
-
-    status_td = status_th.next_element
-    return nil unless status_td
-
-    status_td.text.gsub('  (track log & graph)', '')
+    extract_aircraft_status_raw_text(section).gsub('  (track log & graph)', '')
   end
 
   # This function may need to change according to the web structure changes in the scraped website.
@@ -54,15 +67,9 @@ class AircraftLocationHandler < SmsCommandHandler
     #          </td>
     #          ...
     #       ...
-
-    status_ths = section.css('th').select { |node| node.text == 'Status' }
-    return nil unless status_ths.count > 0
-    status_th = status_ths[0]
-
-    status_td = status_th.next_element
-    return nil unless status_td
-
-    status_td.text.gsub('  (track log & graph)', '')
+    #
+    # happen to be same as the other function.
+    extract_aircraft_status_raw_text(section).gsub('  (track log & graph)', '')
   end
 
   # This function may need to change according to the web structure changes in the scraped website.
@@ -77,15 +84,7 @@ class AircraftLocationHandler < SmsCommandHandler
     #          </td>
     #          ...
     #       ...
-
-    status_ths = section.css('th').select { |node| node.text == 'Status' }
-    return nil unless status_ths.count > 0
-    status_th = status_ths[0]
-
-    status_td = status_th.next_element
-    return nil unless status_td
-
-    status_td.text.gsub('En Route / ', '').gsub('  (track log & graph)', '')
+    extract_aircraft_status_raw_text(section).gsub('  (track log & graph)', '').gsub('En Route / ', '')
   end
 
   def extract_aircraft_location(url)
@@ -100,13 +99,13 @@ class AircraftLocationHandler < SmsCommandHandler
     return nil unless track_panels.count > 0
     track_panel = track_panels[0]
 
-    if !track_panel.text.index('En Route').nil?
+    if track_panel.text.include?('En Route')
       status = extract_en_route_aircraft_status(track_panel)
       return "En route to #{destination}. #{status}."
-    elsif !track_panel.text.index('Landed').nil?
+    elsif track_panel.text.include?('Landed')
       status = extract_landed_aircraft_status(track_panel)
       return "At #{destination}. #{status}"
-    elsif !track_panel.text.index('Arrived').nil?
+    elsif track_panel.text.include?('Arrived')
       status = extract_arrived_aircraft_status(track_panel)
       return "At #{destination}. #{status}"
     else
