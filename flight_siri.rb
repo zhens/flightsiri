@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'twilio-ruby'
 require 'sinatra'
-require 'logger'
+#require 'logger'
 
 require './sms_command_handler'
 require './aircraft_info_handler'
@@ -27,7 +27,7 @@ def handleSmsCommand(sms_text)
     if handler.can_handle? sms_text
       response = handler.handle(sms_text)
       response = handler.failure_message if response.nil?
-      Logger.new(STDOUT).debug "Command \"#{sms_text}\" is handled by #{handler.class}.\nResponse: #{response}"
+      #Logger.new(STDOUT).debug "Command \"#{sms_text}\" is handled by #{handler.class}.\nResponse: #{response}"
       send_sms(response)
       break
     end
