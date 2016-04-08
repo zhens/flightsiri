@@ -8,9 +8,13 @@ GEM
     multi_json (1.11.2)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
-    rack (1.6.4)
+    rack (1.5.5)
     rack-protection (1.5.3)
       rack
+    rake (10.3.2)
+    rakeup (1.2.0)
+      rack (~> 1.5.0)
+      rake (~> 10.3.0)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -28,6 +32,7 @@ DEPENDENCIES
   logger
   nokogiri
   rack
+  rakeup
   sinatra
   twilio-ruby
 
