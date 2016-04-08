@@ -5,7 +5,7 @@ require './sms_command_handler'
 
 class LocationWeatherHandler < SmsCommandHandler
   def can_handle?(sms_text)
-    command_pieces = sms_text.split(' ')
+    command_pieces = sms_text.split
     command_pieces.count == 2 && command_pieces[1] == 'weather'
   end
 
@@ -14,7 +14,7 @@ class LocationWeatherHandler < SmsCommandHandler
   end
 
   def handle(sms_text)
-    location_id, _ = sms_text.split(' ')
+    location_id, _ = sms_text.split
     return 'Invalid location id.' unless is_valid_location_id?(location_id)
     location_weather(location_id)
   end

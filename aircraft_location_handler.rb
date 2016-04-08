@@ -5,7 +5,7 @@ require './sms_command_handler'
 
 class AircraftLocationHandler < SmsCommandHandler
   def can_handle?(sms_text)
-    command_pieces = sms_text.split(' ')
+    command_pieces = sms_text.split
     command_pieces.count == 2 && command_pieces[1] == 'location'
   end
 
@@ -14,7 +14,7 @@ class AircraftLocationHandler < SmsCommandHandler
   end
 
   def handle(sms_text)
-    aircraft_id, _ = sms_text.split(' ')
+    aircraft_id, _ = sms_text.split
     return 'Invalid aircraft id.' unless is_valid_aircraft_id?(aircraft_id)
     flight_location(aircraft_id)
   end
